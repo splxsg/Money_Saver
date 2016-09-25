@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categoryarray">
+        <item> Daily maintenance </item>
+        <item> Utility </item>
+        <item> Loan </item>
+        <item> Insurance </item>
+        <item> Income </item>
+    </string-array>
+
+</resources>
