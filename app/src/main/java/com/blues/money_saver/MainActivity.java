@@ -49,10 +49,10 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        Utility.setCategory("OVERVIEW");
-Utility.setTabindex(0);
+        Utility.setCategory(getString(R.string.nav_overview_str));
+        Utility.setTabindex(0);
 
-       transfragment("OVERVIEW");
+        transfragment(getString(R.string.nav_overview_str));
         //FragmentManager mFragmentManager;
        // FragmentTransaction mFragmentTransaction;
       //  navigationView.getMenu().getItem(R.id.nav_daily).setChecked(true);
@@ -121,12 +121,12 @@ Utility.setTabindex(0);
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_overview) {transfragment("OVERVIEW");}
-        else if (id == R.id.nav_daily) {transfragment("Daily maintenance");}
-        else if (id == R.id.nav_insurance) {transfragment("Insurance");}
-        else if (id == R.id.nav_utility) {transfragment("Utility");}
-        else if (id == R.id.nav_loan) {transfragment("Loan");}
-        else if (id == R.id.nav_income) {transfragment("Income");}
+        if (id == R.id.nav_overview) {transfragment(getString(R.string.nav_overview_str));}
+        else if (id == R.id.nav_daily) {transfragment(getString(R.string.nav_daily_str));}
+        else if (id == R.id.nav_insurance) {transfragment(getString(R.string.nav_insurance_str));}
+        else if (id == R.id.nav_utility) {transfragment(getString(R.string.nav_utility_str));}
+        else if (id == R.id.nav_loan) {transfragment(getString(R.string.nav_loan_str));}
+        else if (id == R.id.nav_income) {transfragment(getString(R.string.nav_income_str));}
         else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

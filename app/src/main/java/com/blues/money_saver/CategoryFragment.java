@@ -26,18 +26,11 @@ public class CategoryFragment extends Fragment implements LoaderManager.LoaderCa
 
     public static final String LOG_TAG = CategoryFragment.class.getSimpleName();
     private MoneyRecycleAdapter mMoneyAdapter;
-    private RecyclerView mRecyclerView;
-    private boolean mUseTodayLayout, mAutoSelectView;
-    private int mChoiceMode;
-    private boolean mHoldForTransition;
-    private long mInitialSelectedDate = -1;
     private static final int CURSOR_LOADER_ID = 0;
-    private Cursor moneyCursor;
     private static final int Money_LOADER = 0;
 
     String monthindex,categoryindex;
 
-    //public static int tbnumber=0;
 
     public CategoryFragment(){}
 
@@ -54,7 +47,7 @@ public class CategoryFragment extends Fragment implements LoaderManager.LoaderCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        monthindex = getArguments().getString("monthFragment");
         categoryindex = Utility.getCategory();
-        View rootView = inflater.inflate(R.layout.fragment_summary,container,false);
+        View rootView = inflater.inflate(R.layout.fragment_category,container,false);
         final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -82,15 +75,15 @@ public class CategoryFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-       // String sortOrder = MoneyContract.MoneyEntry.COLUMN_MONEY_DETAILS + " ASC";
         Uri moneyUri = MoneyContract.MoneyEntry.CONTENT_URI;
         String selectmonth = MoneyContract.MoneyEntry.COLUMN_MONEY_DATE_Month;
         String selectcategory = MoneyContract.MoneyEntry.COLUMN_MONEY_CATEGORY;
 
-        //Log.v("GGGG",categoryindex);
+        Log.v("MONTH",monthindex);
+        Log.v("CCCCC",categoryindex);
         return new CursorLoader(getActivity(),
                 moneyUri,
-                null, //new String[]{MoneyContract.MoneyEntry.COLUMN_MONEY_DETAILS},
+                null,
                 selectmonth + "=? AND " + selectcategory + "=?",
                 new String[] {monthindex,categoryindex},
                 null);
@@ -106,6 +99,7 @@ public class CategoryFragment extends Fragment implements LoaderManager.LoaderCa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
      mMoneyAdapter.swapCursor(data);
+      //  Utility.updateSummary(getActivity(),monthindex);
 
 
     }

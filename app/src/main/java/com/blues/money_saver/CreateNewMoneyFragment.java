@@ -139,6 +139,8 @@ return rootView;
         moneyValues.put(MoneyEntry.COLUMN_MONEY_CHANGE_ABLE,"Y");
         cVVector.add(moneyValues);
         int inserted = 0;
+        Log.v("INSERTTTT",MoneyEntry.CONTENT_URI.toString());
+        Log.v("INSERTTT",moneyValues.toString());
         inserteduri = getContext().getContentResolver().insert(MoneyEntry.CONTENT_URI,moneyValues);
         if(ContentUris.parseId(inserteduri) != -1) {
             Log.d(LOG_TAG, "Add new transaction Complete. " + inserted + " Inserted");

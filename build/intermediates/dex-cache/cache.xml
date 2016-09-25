@@ -163,5 +163,14 @@
         sha1="6e02e34594ebe9c0501ffda8dd48497f81b82977">
         <dex dex="C:\Users\017\AndroidStudioProjects\Money_Saver\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.0_1cee2db469ef592fcf2c386ea4633a0507f68fa5.jar" />
     </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\017\AndroidStudioProjects\Money_Saver\app\build\intermediates\exploded-aar\com.github.lecho\hellocharts-library\1.5.8\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.0"
+        sha1="56c6a22c42588628903e9dda5d8f3aa1c1b4372f">
+        <dex dex="C:\Users\017\AndroidStudioProjects\Money_Saver\app\build\intermediates\pre-dexed\debug\com.github.lecho-hellocharts-library-1.5.8_6478b43cd8c6e2b1ff2af46934c15c42d3179628.jar" />
+    </item>
 
 </items>

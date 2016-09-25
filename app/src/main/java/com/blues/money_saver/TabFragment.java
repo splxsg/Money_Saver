@@ -52,30 +52,11 @@ public class TabFragment extends Fragment  {
         tabLayout = (TabLayout) x.findViewById(R.id.tabs);
         viewPager = (ViewPager) x.findViewById(R.id.viewpager);
 
-
-
-
-
-
         /**
          *Set an Apater for the View Pager
          */
-
-
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
 
-
-
-        //viewPager.setCurrentItem(3);
-        //tabLayout.setScrollPosition(3,3,false);
-
-        //final TabWidget tabWidget =
-
-
-
-
-
-        //tabLayout.setScrollPosition(Utility.getTabindex(),0,false);
         PageListener pageListener = new PageListener();
         viewPager.setOnPageChangeListener(pageListener);
 
@@ -121,16 +102,25 @@ public class TabFragment extends Fragment  {
 
 
         @Override
-        public Fragment getItem(int position)
-        {
+        public Fragment getItem(int position) {
 
-            CategoryFragment categoryFragment = new CategoryFragment();
-
-
-            Bundle bundle = new Bundle();
-            bundle.putString("monthFragment",Utility.Monthontab[position]);
-            categoryFragment.setArguments(bundle);
-            return categoryFragment;
+            if (Utility.getCategory() != getString(R.string.nav_overview_str)) {
+                Log.v("DDDDDDDD","OVERVIEW");
+                CategoryFragment categoryFragment = new CategoryFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("monthFragment", Utility.Monthontab[position]);
+                categoryFragment.setArguments(bundle);
+                return categoryFragment;
+            }
+            else
+            {
+                Log.v("DDDDDDDD","other");
+                OverviewFragment overviewFragment = new OverviewFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("monthFragment", Utility.Monthontab[position]);
+                overviewFragment.setArguments(bundle);
+                return overviewFragment;
+            }
         }
 
         @Override

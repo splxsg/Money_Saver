@@ -4,9 +4,11 @@ import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
@@ -17,16 +19,31 @@ import android.util.Log;
 public class MoneyProvider extends ContentProvider{
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private MoneyDbHelper mOpenHelper;
+    private static final SQLiteQueryBuilder updateSummaryquery = new SQLiteQueryBuilder();
+
+
+
 
     static final int MONEY = 100;
+    static final int SUMMARY = 200;
     static UriMatcher buildUriMatcher(){
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MoneyContract.CONTENT_AUTHORITY;
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, MoneyContract.PATH_MONEY, MONEY);
+        matcher.addURI(authority, MoneyContract.PATH_SUMMARY, SUMMARY);
         return matcher;
     }
+
+    public static void updateSummary()
+    {
+        Cursor mCursor;
+
+
+    }
+
+
     @Override
     public boolean onCreate() {
         mOpenHelper = new MoneyDbHelper(getContext());
@@ -41,12 +58,17 @@ public class MoneyProvider extends ContentProvider{
 
         switch (match) {
             // only one table here
-            case 100:
+            case MONEY:
                 return MoneyContract.MoneyEntry.CONTENT_ITEM_TYPE;
+            case SUMMARY:
+                return MoneyContract.SummaryEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
     }
+
+
+
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
@@ -55,9 +77,22 @@ public class MoneyProvider extends ContentProvider{
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
 
-            case 100: {
+            case MONEY: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        MoneyContract.MoneyEntry.TABLE_NAME,
+                        MoneyContract.MoneyEntry.MONEY_TABLE,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+
+            case SUMMARY:{
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        MoneyContract.SummaryEntry.SUMMARY_TABLE,
                         projection,
                         selection,
                         selectionArgs,
@@ -80,13 +115,22 @@ public class MoneyProvider extends ContentProvider{
     public Uri insert(Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
+        Log.v("IIIIII",match+"");
         Uri returnUri;
 
         switch (match) {
-            case 100: {
-                long _id = db.insert(MoneyContract.MoneyEntry.TABLE_NAME, null, values);
+            case MONEY: {
+                long _id = db.insert(MoneyContract.MoneyEntry.MONEY_TABLE, null, values);
                 if (_id > 0)
                     returnUri = MoneyContract.MoneyEntry.buildMoneyUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case SUMMARY: {
+                long _id = db.insert(MoneyContract.SummaryEntry.SUMMARY_TABLE, null, values);
+                if (_id > 0)
+                    returnUri = MoneyContract.SummaryEntry.buildMoneyUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -106,9 +150,13 @@ public class MoneyProvider extends ContentProvider{
         // this makes delete all rows return the number of rows deleted
         if (null == selection) selection = "1";
         switch (match) {
-            case 100:
+            case MONEY:
                 rowsDeleted = db.delete(
-                        MoneyContract.MoneyEntry.TABLE_NAME, selection, selectionArgs);
+                        MoneyContract.MoneyEntry.MONEY_TABLE, selection, selectionArgs);
+                break;
+            case SUMMARY:
+                rowsDeleted = db.delete(
+                        MoneyContract.SummaryEntry.SUMMARY_TABLE, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -128,8 +176,12 @@ public class MoneyProvider extends ContentProvider{
         int rowsUpdated;
 
         switch (match) {
-            case 100:
-                rowsUpdated = db.update(MoneyContract.MoneyEntry.TABLE_NAME, values, selection,
+            case MONEY:
+                rowsUpdated = db.update(MoneyContract.MoneyEntry.MONEY_TABLE, values, selection,
+                        selectionArgs);
+                break;
+            case SUMMARY:
+                rowsUpdated = db.update(MoneyContract.SummaryEntry.SUMMARY_TABLE, values, selection,
                         selectionArgs);
                 break;
             default:
@@ -152,7 +204,24 @@ public class MoneyProvider extends ContentProvider{
                 try {
                     for (ContentValues value : values) {
 
-                        long _id = db.insert(MoneyContract.MoneyEntry.TABLE_NAME, null, value);
+                        long _id = db.insert(MoneyContract.MoneyEntry.MONEY_TABLE, null, value);
+                        if (_id != -1) {
+                            returnCount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            case SUMMARY:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+
+                        long _id = db.insert(MoneyContract.SummaryEntry.SUMMARY_TABLE, null, value);
                         if (_id != -1) {
                             returnCount++;
                         }

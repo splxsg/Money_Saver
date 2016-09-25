@@ -3,15 +3,12 @@ package com.blues.money_saver;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.blues.money_saver.data.MoneyContract;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by Blues on 20/09/2016.
@@ -35,7 +32,7 @@ public class MoneyRecycleAdapter extends RecyclerView.Adapter<MoneyRecycleAdapte
 
         @Override
         public MoneyRecycleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MoneyRecycleViewHolder(mLayoutInflater.inflate(R.layout.list_item_summary, parent, false));
+            return new MoneyRecycleViewHolder(mLayoutInflater.inflate(R.layout.list_item_category, parent, false));
         }
 
         @Override
