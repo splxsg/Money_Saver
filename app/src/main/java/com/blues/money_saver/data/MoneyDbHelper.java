@@ -10,7 +10,7 @@ import com.blues.money_saver.data.MoneyContract.MoneyEntry;
  * Created by Blues on 04/09/2016.
  */
 public class MoneyDbHelper extends SQLiteOpenHelper{
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     static final String DATABASE_NAME = "money.db";
     public MoneyDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
