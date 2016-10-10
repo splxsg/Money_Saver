@@ -79,14 +79,13 @@ public class CategoryFragment extends Fragment implements LoaderManager.LoaderCa
         String selectmonth = MoneyContract.MoneyEntry.COLUMN_MONEY_DATE_Month;
         String selectcategory = MoneyContract.MoneyEntry.COLUMN_MONEY_CATEGORY;
 
-        Log.v("MONTH",monthindex);
-        Log.v("CCCCC",categoryindex);
         return new CursorLoader(getActivity(),
                 moneyUri,
                 null,
                 selectmonth + "=? AND " + selectcategory + "=?",
                 new String[] {monthindex,categoryindex},
                 null);
+
     }
     public interface Callback {
         /**

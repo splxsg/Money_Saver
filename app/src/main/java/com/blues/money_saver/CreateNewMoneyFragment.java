@@ -30,7 +30,7 @@ import java.util.Vector;
  */
 public class CreateNewMoneyFragment extends Fragment {
     static private Button insertbtn;
-    private String LOG_TAG = "Create new money fragment";
+    private String LOG_TAG = this.getTag();
     private int mYear, mMonth, mDay, newYear,newMonth,newDay;
     private String categoryStr;
 
@@ -93,7 +93,6 @@ public class CreateNewMoneyFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 String[] categoryarr = getResources().getStringArray(R.array.categoryarray);
                 categoryStr = categoryarr[pos];
-
             }
 
             @Override
@@ -139,11 +138,10 @@ return rootView;
         moneyValues.put(MoneyEntry.COLUMN_MONEY_CHANGE_ABLE,"Y");
         cVVector.add(moneyValues);
         int inserted = 0;
-        Log.v("INSERTTTT",MoneyEntry.CONTENT_URI.toString());
-        Log.v("INSERTTT",moneyValues.toString());
+
         inserteduri = getContext().getContentResolver().insert(MoneyEntry.CONTENT_URI,moneyValues);
         if(ContentUris.parseId(inserteduri) != -1) {
-            Log.d(LOG_TAG, "Add new transaction Complete. " + inserted + " Inserted");
+              Utility.updateSummary(getActivity(),month);
             Toast.makeText(getContext(),"DONE",Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }

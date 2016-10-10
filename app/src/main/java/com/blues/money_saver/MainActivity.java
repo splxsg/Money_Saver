@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onResume();
 
+
     }
 
     private void transfragment(String menuid)

@@ -105,7 +105,6 @@ public class TabFragment extends Fragment  {
         public Fragment getItem(int position) {
 
             if (Utility.getCategory() != getString(R.string.nav_overview_str)) {
-                Log.v("DDDDDDDD","OVERVIEW");
                 CategoryFragment categoryFragment = new CategoryFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("monthFragment", Utility.Monthontab[position]);
@@ -114,7 +113,6 @@ public class TabFragment extends Fragment  {
             }
             else
             {
-                Log.v("DDDDDDDD","other");
                 OverviewFragment overviewFragment = new OverviewFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("monthFragment", Utility.Monthontab[position]);

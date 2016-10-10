@@ -58,6 +58,9 @@ public class MoneyContract {
         public static final String COLUMN_SUMMARY_PAYOUT = "summary_payout";
         public static final String COLUMN_SUMMARY_BALANCE = "summary_balance";
         public static final String COLUMN_SUMMARY_MONTH = "summary_Month";
+        public static final String COLUMN_SUMMARY_DAILY = "summary_daily";
+        public static final String COLUMN_SUMMARY_UTILITY = "summary_utility";
+        public static final String COLUMN_SUMMARY_INSURANCE = "summary_insurance";
 
         public static Uri buildMoneyUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI,id);

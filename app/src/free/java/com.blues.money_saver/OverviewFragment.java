@@ -1,6 +1,7 @@
 package com.blues.money_saver;
 
-
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,11 +12,21 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.blues.money_saver.OverviewRecycleAdapter;
+import com.blues.money_saver.R;
+import com.blues.money_saver.Utility;
 import com.blues.money_saver.data.MoneyContract;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
+import java.util.Vector;
+
+import static com.blues.money_saver.CategoryFragment.LOG_TAG;
 
 /**
  * Created by Blues on 25/09/2016.
@@ -41,13 +52,63 @@ public class OverviewFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         monthindex = getArguments().getString("monthFragment");
+        initialsummary();
         View rootView = inflater.inflate(R.layout.fragment_overview, container, false);
         final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_summary);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
         mOverviewAdapter = new OverviewRecycleAdapter(getActivity());
         recyclerView.setAdapter(mOverviewAdapter);
+
+        AdView mAdView = (AdView) rootView.findViewById(R.id.adView);
+        if(getResources().getString(R.string.flavors) == getResources().getString(R.string.freeflavors))
+        {
+
+
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .build();
+            mAdView.loadAd(adRequest);
+        }
+
         return rootView;
+    }
+
+
+    private void initialsummary()
+    {
+        Uri inserteduri;
+        Cursor summaryCursor;
+        String select_month = MoneyContract.SummaryEntry.COLUMN_SUMMARY_MONTH;
+        for(int i=0;i<12;i++)
+        {
+            summaryCursor = getContext().getContentResolver().query(MoneyContract.SummaryEntry.CONTENT_URI,
+                    null,
+                    select_month + "=?",
+                    new String[]{Utility.monthConvert(i)},
+                    null);
+            if(!summaryCursor.moveToFirst())
+            {
+                Vector<ContentValues> cVVector = new Vector<ContentValues>(1);
+                ContentValues moneyValues = new ContentValues();
+
+                moneyValues.put(MoneyContract.SummaryEntry.COLUMN_SUMMARY_INCOME,0);
+                moneyValues.put(MoneyContract.SummaryEntry.COLUMN_SUMMARY_PAYOUT,0);
+                moneyValues.put(MoneyContract.SummaryEntry.COLUMN_SUMMARY_BALANCE,0);
+                moneyValues.put(MoneyContract.SummaryEntry.COLUMN_SUMMARY_MONTH,Utility.monthConvert(i));
+                moneyValues.put(MoneyContract.SummaryEntry.COLUMN_SUMMARY_DAILY,0);
+                moneyValues.put(MoneyContract.SummaryEntry.COLUMN_SUMMARY_UTILITY,0);
+                moneyValues.put(MoneyContract.SummaryEntry.COLUMN_SUMMARY_INSURANCE,0);
+
+                cVVector.add(moneyValues);
+                int inserted = 0;
+                inserteduri = getContext().getContentResolver().insert(MoneyContract.SummaryEntry.CONTENT_URI, moneyValues);
+                if(ContentUris.parseId(inserteduri) != -1)
+                    Log.d(LOG_TAG, "FetchWeatherTask Complete. " + inserted + " Inserted");
+            }
+        }
+
+
     }
 
     @Override
@@ -60,23 +121,26 @@ public class OverviewFragment extends Fragment implements LoaderManager.LoaderCa
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Uri moneyUri = MoneyContract.SummaryEntry.CONTENT_URI;
         String select_month = MoneyContract.SummaryEntry.COLUMN_SUMMARY_MONTH;
-
+        Utility.updateSummary(getActivity(),monthindex);
         return new CursorLoader(getActivity(),
                 moneyUri,
                 null,
                 select_month + "=?",
                 new String[]{monthindex},
                 null);
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.v("loaderfinished","");
         data.moveToFirst();
         mOverviewAdapter.swapCursor(data);
 
     }
     @Override
     public void onLoaderReset(Loader<Cursor> loader){
+        Log.v("loaderreset","");
         mOverviewAdapter.swapCursor(null);
     }
 
